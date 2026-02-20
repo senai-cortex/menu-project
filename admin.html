@@ -1,0 +1,124 @@
+<!doctype html>
+<html lang="pt-BR">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <meta
+      name="description"
+      content="Painel local para editar itens do cardápio e exportar JSON atualizado."
+    />
+    <title>Kurohana Administração | Editor de Cardápio</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link
+      href="https://fonts.googleapis.com/css2?family=Bodoni+Moda:opsz,wght@6..96,400;6..96,600;6..96,700&family=Noto+Serif+JP:wght@400;600;700&display=swap"
+      rel="stylesheet"
+    />
+    <link rel="stylesheet" href="assets/css/styles.css" />
+  </head>
+  <body data-page="admin">
+    <div class="site-bg" aria-hidden="true"></div>
+
+    <header class="hero container hero-admin">
+      <p class="hero-kicker">Administração Local</p>
+      <h1 class="hero-title">Editor de Cardápio JSON</h1>
+      <p class="hero-subtitle">
+        Edite itens localmente e exporte um novo arquivo JSON para publicação.
+      </p>
+    </header>
+
+    <main class="container admin-layout" id="main-content">
+      <section class="admin-panel">
+        <h2>Ferramentas</h2>
+
+        <div class="tool-row">
+          <button id="import-btn" type="button">Importar JSON</button>
+          <input id="import-input" type="file" accept="application/json" hidden />
+          <button id="export-btn" type="button">Exportar JSON</button>
+          <button id="reset-btn" type="button" class="danger">Desfazer alterações</button>
+        </div>
+
+        <div class="field">
+          <label for="admin-search">Buscar item</label>
+          <input id="admin-search" type="search" placeholder="Nome ou descrição" autocomplete="off" />
+        </div>
+
+        <div class="field">
+          <label for="admin-category-filter">Categoria</label>
+          <select id="admin-category-filter">
+            <option value="all">Todas</option>
+          </select>
+        </div>
+
+        <p id="admin-status" class="status-message">Carregando dados...</p>
+        <div id="diff-summary" class="diff-summary"></div>
+
+        <div class="admin-list-wrap" aria-label="Lista de itens">
+          <ul id="admin-item-list" class="admin-item-list"></ul>
+        </div>
+      </section>
+
+      <section class="admin-panel">
+        <h2 id="form-title">Novo item</h2>
+
+        <form id="item-form" novalidate>
+          <div class="field">
+            <label for="item-id">ID</label>
+            <input id="item-id" name="id" type="text" placeholder="Gerado automaticamente" />
+          </div>
+
+          <div class="field">
+            <label for="item-name">Nome</label>
+            <input id="item-name" name="name" type="text" required maxlength="80" />
+            <small class="error-text" data-error-for="name"></small>
+          </div>
+
+          <div class="field">
+            <label for="item-category">Categoria</label>
+            <select id="item-category" name="categoryId" required></select>
+            <small class="error-text" data-error-for="categoryId"></small>
+          </div>
+
+          <div class="field field-inline">
+            <div>
+              <label for="item-price">Preço (JPY)</label>
+              <input id="item-price" name="price" type="number" min="1" step="1" required />
+              <small class="error-text" data-error-for="price"></small>
+            </div>
+            <div>
+              <label for="item-rating">Avaliação (0-5)</label>
+              <input id="item-rating" name="rating" type="number" min="0" max="5" step="0.1" required />
+              <small class="error-text" data-error-for="rating"></small>
+            </div>
+          </div>
+
+          <div class="field">
+            <label for="item-image">Imagem (URL)</label>
+            <input id="item-image" name="image" type="url" required />
+            <small class="error-text" data-error-for="image"></small>
+          </div>
+
+          <div class="field">
+            <label for="item-description">Descrição</label>
+            <textarea id="item-description" name="description" rows="4" maxlength="280" required></textarea>
+            <small class="error-text" data-error-for="description"></small>
+          </div>
+
+          <div class="tool-row">
+            <button type="submit" id="save-btn">Salvar item</button>
+            <button type="button" id="new-btn">Novo item</button>
+            <button type="button" id="delete-btn" class="danger hidden">Remover item</button>
+          </div>
+        </form>
+      </section>
+
+      <section class="admin-panel">
+        <h2>Pré-visualização</h2>
+        <div id="preview-card" class="menu-grid single-preview"></div>
+      </section>
+    </main>
+
+    <script src="assets/js/utils.js"></script>
+    <script src="assets/js/admin.js" defer></script>
+  </body>
+</html>

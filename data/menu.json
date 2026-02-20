@@ -1,0 +1,149 @@
+{
+  "meta": {
+    "restaurantName": "Kurohana Sushi",
+    "currency": "JPY",
+    "locale": "pt-BR",
+    "lastUpdated": "2026-02-20T09:30:00Z"
+  },
+  "categories": [
+    {
+      "id": "sushi",
+      "name": "Sushi",
+      "order": 1
+    },
+    {
+      "id": "sashimi",
+      "name": "Sashimi",
+      "order": 2
+    },
+    {
+      "id": "combos",
+      "name": "Combos",
+      "order": 3
+    },
+    {
+      "id": "bebidas",
+      "name": "Bebidas",
+      "order": 4
+    }
+  ],
+  "items": [
+    {
+      "id": "california-roll",
+      "categoryId": "sushi",
+      "name": "Uramaki Califórnia",
+      "price": 1200,
+      "image": "https://images.unsplash.com/photo-1611143669185-af224c5e3252?auto=format&fit=crop&w=1200&q=80",
+      "rating": 4.7,
+      "description": "Rolinhos com kani, pepino e abacate, finalizados com gergelim tostado para textura delicada."
+    },
+    {
+      "id": "ebi-nigiri",
+      "categoryId": "sushi",
+      "name": "Ebi Nigiri",
+      "price": 980,
+      "image": "https://images.unsplash.com/photo-1607301405390-d831c242f59b?auto=format&fit=crop&w=1200&q=80",
+      "rating": 4.4,
+      "description": "Dupla de nigiri com camarão cozido, arroz temperado e acabamento suave de molho nikiri."
+    },
+    {
+      "id": "spicy-tuna-roll",
+      "categoryId": "sushi",
+      "name": "Uramaki de Atum Picante",
+      "price": 1450,
+      "image": "https://images.unsplash.com/photo-1553621042-f6e147245754?auto=format&fit=crop&w=1200&q=80",
+      "rating": 4.8,
+      "description": "Atum temperado com pimenta japonesa, cebolinha e toque cítrico, enrolado em alga nori crocante."
+    },
+    {
+      "id": "tamago-nigiri",
+      "categoryId": "sushi",
+      "name": "Tamago Nigiri",
+      "price": 850,
+      "image": "https://images.unsplash.com/photo-1579584425555-c3ce17fd4351?auto=format&fit=crop&w=1200&q=80",
+      "rating": 4.2,
+      "description": "Omelete japonesa levemente adocicada sobre arroz avinagrado, clássico e equilibrado."
+    },
+    {
+      "id": "sake-sashimi",
+      "categoryId": "sashimi",
+      "name": "Sashimi de Salmão",
+      "price": 1700,
+      "image": "https://images.unsplash.com/photo-1579871494447-9811cf80d66c?auto=format&fit=crop&w=1200&q=80",
+      "rating": 4.9,
+      "description": "Fatias finas de salmão fresco, corte preciso e textura macia, servidas com wasabi artesanal."
+    },
+    {
+      "id": "maguro-sashimi",
+      "categoryId": "sashimi",
+      "name": "Sashimi de Atum",
+      "price": 1850,
+      "image": "https://images.unsplash.com/photo-1582450871972-ab5ca9ce5d06?auto=format&fit=crop&w=1200&q=80",
+      "rating": 4.8,
+      "description": "Atum fresco em lâminas uniformes, sabor limpo e final persistente no paladar."
+    },
+    {
+      "id": "hamachi-sashimi",
+      "categoryId": "sashimi",
+      "name": "Sashimi de Hamachi",
+      "price": 2100,
+      "image": "https://images.unsplash.com/photo-1584583570840-0a9ce4f7f04f?auto=format&fit=crop&w=1200&q=80",
+      "rating": 4.6,
+      "description": "Hamachi de gordura sutil, sabor amanteigado e acabamento com raspas de yuzu."
+    },
+    {
+      "id": "chef-combo-10",
+      "categoryId": "combos",
+      "name": "Combinado do Chef 10",
+      "price": 3200,
+      "image": "https://images.unsplash.com/photo-1617196034796-73dfa7b1fd56?auto=format&fit=crop&w=1200&q=80",
+      "rating": 4.9,
+      "description": "Seleção de 10 peças entre nigiri, uramaki e gunkan escolhidas diariamente pelo chef."
+    },
+    {
+      "id": "sunset-combo-14",
+      "categoryId": "combos",
+      "name": "Combinado Pôr do Sol 14",
+      "price": 4200,
+      "image": "https://images.unsplash.com/photo-1625938145744-6b03d2f5f4f6?auto=format&fit=crop&w=1200&q=80",
+      "rating": 4.7,
+      "description": "Composição para compartilhar com 14 peças variadas, incluindo uramaki especiais da casa."
+    },
+    {
+      "id": "omakase-mini",
+      "categoryId": "combos",
+      "name": "Omakase Pequeno",
+      "price": 3900,
+      "image": "https://images.unsplash.com/photo-1627308594190-a057cd4bf8de?auto=format&fit=crop&w=1200&q=80",
+      "rating": 4.8,
+      "description": "Experiência curta com harmonização de 8 tempos, curada para destacar sazonalidade."
+    },
+    {
+      "id": "matcha-iced-tea",
+      "categoryId": "bebidas",
+      "name": "Chá Gelado de Matcha",
+      "price": 700,
+      "image": "https://images.unsplash.com/photo-1623428454614-abaf52ec5660?auto=format&fit=crop&w=1200&q=80",
+      "rating": 4.3,
+      "description": "Chá verde matcha gelado, levemente adocicado, com aroma vegetal elegante."
+    },
+    {
+      "id": "yuzu-soda",
+      "categoryId": "bebidas",
+      "name": "Refrigerante de Yuzu",
+      "price": 760,
+      "image": "https://images.unsplash.com/photo-1523362628745-0c100150b504?auto=format&fit=crop&w=1200&q=80",
+      "rating": 4.5,
+      "description": "Refrigerante artesanal cítrico com yuzu japonês e bolhas finas para refrescar."
+    },
+    {
+      "id": "ramune-original",
+      "categoryId": "bebidas",
+      "name": "Ramune Original",
+      "price": 650,
+      "image": "https://images.unsplash.com/photo-1544145945-f90425340c7e?auto=format&fit=crop&w=1200&q=80",
+      "rating": 4.1,
+      "description": "Bebida clássica japonesa levemente doce, servida em garrafa tradicional com esfera."
+    }
+  ]
+}

@@ -1,0 +1,117 @@
+<!doctype html>
+<html lang="pt-BR">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <meta
+      name="description"
+      content="Cardápio digital interativo de sushi com busca, filtros e visual vintage moderno."
+    />
+    <title>Kurohana Sushi | Cardápio Digital</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link
+      href="https://fonts.googleapis.com/css2?family=Bodoni+Moda:opsz,wght@6..96,400;6..96,600;6..96,700&family=Noto+Serif+JP:wght@400;600;700&display=swap"
+      rel="stylesheet"
+    />
+    <link rel="stylesheet" href="assets/css/styles.css" />
+  </head>
+  <body data-page="menu">
+    <div class="site-bg" aria-hidden="true"></div>
+
+    <header class="hero container">
+      <p class="hero-kicker">Cardápio Digital Interativo</p>
+      <h1 class="hero-title">Kurohana Sushi</h1>
+      <p class="hero-subtitle">
+        Tradição japonesa em uma experiência moderna. Escolha por categoria,
+        filtro de preço e popularidade.
+      </p>
+    </header>
+
+    <main class="container" id="main-content">
+      <section class="controls" aria-label="Busca e filtros">
+        <div class="field">
+          <label for="search-input">Buscar prato</label>
+          <input
+            id="search-input"
+            type="search"
+            placeholder="Ex: Salmão, Combinado, Yuzu"
+            autocomplete="off"
+          />
+        </div>
+
+        <div class="field">
+          <label for="category-filter">Categoria</label>
+          <select id="category-filter" aria-label="Filtrar por categoria">
+            <option value="all">Todas</option>
+          </select>
+        </div>
+
+        <div class="field">
+          <label for="price-filter">Faixa de preço</label>
+          <select id="price-filter" aria-label="Filtrar por faixa de preço">
+            <option value="all">Qualquer valor</option>
+            <option value="0-1000">Até ¥1.000</option>
+            <option value="1001-1800">¥1.001 a ¥1.800</option>
+            <option value="1801-3000">¥1.801 a ¥3.000</option>
+            <option value="3001-999999">Acima de ¥3.000</option>
+          </select>
+        </div>
+
+        <div class="field">
+          <label for="rating-filter">Popularidade</label>
+          <select id="rating-filter" aria-label="Filtrar por popularidade">
+            <option value="0">Todas</option>
+            <option value="4">A partir de 4.0</option>
+            <option value="4.5">A partir de 4.5</option>
+            <option value="4.8">A partir de 4.8</option>
+          </select>
+        </div>
+
+        <div class="field">
+          <label for="sort-filter">Ordenação</label>
+          <select id="sort-filter" aria-label="Ordenar itens">
+            <option value="popular">Mais populares</option>
+            <option value="price-asc">Menor preço</option>
+            <option value="price-desc">Maior preço</option>
+            <option value="name-asc">Nome A-Z</option>
+          </select>
+        </div>
+      </section>
+
+      <section class="status-wrap" aria-live="polite">
+        <p id="results-count" class="results-count"></p>
+        <p id="loading-state" class="status-message">Carregando cardápio...</p>
+        <p id="error-state" class="status-message hidden" role="alert">
+          Não foi possível carregar o cardápio. Recarregue a página.
+        </p>
+        <p id="empty-state" class="status-message hidden">
+          Nenhum item encontrado para os filtros aplicados.
+        </p>
+      </section>
+
+      <section aria-label="Itens do cardápio">
+        <div id="menu-grid" class="menu-grid" role="list"></div>
+      </section>
+    </main>
+
+    <dialog id="item-modal" class="item-modal" aria-labelledby="modal-title">
+      <article>
+        <button type="button" class="modal-close" id="modal-close" aria-label="Fechar detalhes">
+          Fechar
+        </button>
+        <img id="modal-image" src="" alt="" />
+        <div class="modal-content">
+          <p id="modal-category" class="tag"></p>
+          <h2 id="modal-title"></h2>
+          <p id="modal-price" class="price"></p>
+          <p id="modal-rating" class="rating"></p>
+          <p id="modal-description"></p>
+        </div>
+      </article>
+    </dialog>
+
+    <script src="assets/js/utils.js"></script>
+    <script src="assets/js/app.js" defer></script>
+  </body>
+</html>

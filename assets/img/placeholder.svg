@@ -1,0 +1,23 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 800 500" role="img" aria-label="Imagem indisponível">
+  <defs>
+    <linearGradient id="bg" x1="0" y1="0" x2="1" y2="1">
+      <stop offset="0%" stop-color="#2a1218" />
+      <stop offset="100%" stop-color="#4a1d2a" />
+    </linearGradient>
+  </defs>
+  <rect width="800" height="500" fill="url(#bg)" />
+  <g fill="none" stroke="#d4b074" stroke-width="10" opacity="0.6">
+    <path d="M120 360 L270 190 L380 300 L520 130 L680 320" />
+    <circle cx="280" cy="170" r="40" />
+  </g>
+  <text
+    x="50%"
+    y="86%"
+    text-anchor="middle"
+    fill="#f5ece0"
+    font-size="34"
+    font-family="'Noto Serif JP', serif"
+  >
+    Imagem indisponível
+  </text>
+</svg>
