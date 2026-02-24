@@ -14,6 +14,8 @@
 
   const elements = {
     searchInput: document.getElementById("search-input"),
+    filtersToggle: document.getElementById("filters-toggle"),
+    filtersPanel: document.getElementById("filters-panel"),
     categoryFilter: document.getElementById("category-filter"),
     priceFilter: document.getElementById("price-filter"),
     ratingFilter: document.getElementById("rating-filter"),
@@ -33,10 +35,26 @@
     modalImage: document.getElementById("modal-image")
   };
 
+  const compactViewportQuery = window.matchMedia("(max-width: 680px)");
+
   const state = {
     data: null,
     categoriesById: new Map()
   };
+
+  function setFiltersPanelState(isExpanded) {
+    elements.filtersPanel.hidden = !isExpanded;
+    elements.filtersToggle.setAttribute("aria-expanded", String(isExpanded));
+    elements.filtersToggle.textContent = isExpanded ? "Ocultar filtros" : "Mostrar filtros";
+  }
+
+  function syncFiltersForViewport(isCompactViewport) {
+    if (!isCompactViewport) {
+      setFiltersPanelState(true);
+      return;
+    }
+    setFiltersPanelState(false);
+  }
 
   function showError(message) {
     elements.loadingState.classList.add("hidden");
@@ -169,6 +187,10 @@
     const debouncedFilters = debounce(applyFilters, 180);
 
     elements.searchInput.addEventListener("input", debouncedFilters);
+    elements.filtersToggle.addEventListener("click", () => {
+      const isExpanded = elements.filtersToggle.getAttribute("aria-expanded") === "true";
+      setFiltersPanelState(!isExpanded);
+    });
     elements.categoryFilter.addEventListener("change", applyFilters);
     elements.priceFilter.addEventListener("change", applyFilters);
     elements.ratingFilter.addEventListener("change", applyFilters);
@@ -182,10 +204,20 @@
         closeDetailsModal();
       }
     });
+
+    const onViewportChange = (event) => {
+      syncFiltersForViewport(event.matches);
+    };
+    if (typeof compactViewportQuery.addEventListener === "function") {
+      compactViewportQuery.addEventListener("change", onViewportChange);
+    } else {
+      compactViewportQuery.addListener(onViewportChange);
+    }
   }
 
   async function init() {
     bindEvents();
+    syncFiltersForViewport(compactViewportQuery.matches);
 
     try {
       const response = await fetch("data/menu.json", { cache: "no-store" });

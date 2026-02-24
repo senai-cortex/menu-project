@@ -30,7 +30,7 @@
 
     <main class="container" id="main-content">
       <section class="controls" aria-label="Busca e filtros">
-        <div class="field">
+        <div class="field field-search">
           <label for="search-input">Buscar prato</label>
           <input
             id="search-input"
@@ -40,42 +40,54 @@
           />
         </div>
 
-        <div class="field">
-          <label for="category-filter">Categoria</label>
-          <select id="category-filter" aria-label="Filtrar por categoria">
-            <option value="all">Todas</option>
-          </select>
-        </div>
+        <button
+          type="button"
+          id="filters-toggle"
+          class="filters-toggle"
+          aria-controls="filters-panel"
+          aria-expanded="true"
+        >
+          Ocultar filtros
+        </button>
 
-        <div class="field">
-          <label for="price-filter">Faixa de preço</label>
-          <select id="price-filter" aria-label="Filtrar por faixa de preço">
-            <option value="all">Qualquer valor</option>
-            <option value="0-1000">Até ¥1.000</option>
-            <option value="1001-1800">¥1.001 a ¥1.800</option>
-            <option value="1801-3000">¥1.801 a ¥3.000</option>
-            <option value="3001-999999">Acima de ¥3.000</option>
-          </select>
-        </div>
+        <div id="filters-panel" class="filters-panel">
+          <div class="field">
+            <label for="category-filter">Categoria</label>
+            <select id="category-filter" aria-label="Filtrar por categoria">
+              <option value="all">Todas</option>
+            </select>
+          </div>
 
-        <div class="field">
-          <label for="rating-filter">Popularidade</label>
-          <select id="rating-filter" aria-label="Filtrar por popularidade">
-            <option value="0">Todas</option>
-            <option value="4">A partir de 4.0</option>
-            <option value="4.5">A partir de 4.5</option>
-            <option value="4.8">A partir de 4.8</option>
-          </select>
-        </div>
+          <div class="field">
+            <label for="price-filter">Faixa de preço</label>
+            <select id="price-filter" aria-label="Filtrar por faixa de preço">
+              <option value="all">Qualquer valor</option>
+              <option value="0-1000">Até ¥1.000</option>
+              <option value="1001-1800">¥1.001 a ¥1.800</option>
+              <option value="1801-3000">¥1.801 a ¥3.000</option>
+              <option value="3001-999999">Acima de ¥3.000</option>
+            </select>
+          </div>
 
-        <div class="field">
-          <label for="sort-filter">Ordenação</label>
-          <select id="sort-filter" aria-label="Ordenar itens">
-            <option value="popular">Mais populares</option>
-            <option value="price-asc">Menor preço</option>
-            <option value="price-desc">Maior preço</option>
-            <option value="name-asc">Nome A-Z</option>
-          </select>
+          <div class="field">
+            <label for="rating-filter">Popularidade</label>
+            <select id="rating-filter" aria-label="Filtrar por popularidade">
+              <option value="0">Todas</option>
+              <option value="4">A partir de 4.0</option>
+              <option value="4.5">A partir de 4.5</option>
+              <option value="4.8">A partir de 4.8</option>
+            </select>
+          </div>
+
+          <div class="field">
+            <label for="sort-filter">Ordenação</label>
+            <select id="sort-filter" aria-label="Ordenar itens">
+              <option value="popular">Mais populares</option>
+              <option value="price-asc">Menor preço</option>
+              <option value="price-desc">Maior preço</option>
+              <option value="name-asc">Nome A-Z</option>
+            </select>
+          </div>
         </div>
       </section>
 
