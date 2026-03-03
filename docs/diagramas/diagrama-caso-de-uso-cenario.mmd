@@ -7,17 +7,26 @@ flowchart LR
     uc_listar_admin([Listar itens no painel])
     uc_buscar_admin([Buscar item])
     uc_filtrar_admin([Filtrar por categoria])
-    uc_criar([Criar item])
-    uc_editar([Editar item])
+    uc_criar([Criar item do cardapio])
+    uc_editar([Editar item do cardapio])
     uc_validar([Validar campos obrigatorios])
     uc_preview([Visualizar preview do item])
-    uc_remover([Remover item])
-    uc_importar([Importar JSON])
-    uc_exportar([Exportar JSON atualizado])
+    uc_remover([Remover item do cardapio])
+    uc_importar([Importar arquivo JSON])
+    uc_exportar([Exportar arquivo JSON atualizado])
     uc_resetar([Desfazer alteracoes locais])
   end
 
   actor_admin --- uc_abrir_painel
+  actor_admin --- uc_listar_admin
+  actor_admin --- uc_buscar_admin
+  actor_admin --- uc_filtrar_admin
+  actor_admin --- uc_criar
+  actor_admin --- uc_editar
+  actor_admin --- uc_remover
+  actor_admin --- uc_importar
+  actor_admin --- uc_exportar
+  actor_admin --- uc_resetar
 
   uc_abrir_painel -. "<<include>>" .-> uc_carregar_json
   uc_carregar_json -. "<<include>>" .-> uc_listar_admin
@@ -30,10 +39,10 @@ flowchart LR
   uc_criar -. "<<include>>" .-> uc_preview
   uc_editar -. "<<include>>" .-> uc_preview
 
-  uc_remover -. "<<extend>>" .-> uc_listar_admin
-  uc_importar -. "<<extend>>" .-> uc_listar_admin
-  uc_resetar -. "<<extend>>" .-> uc_listar_admin
+  uc_remover -. "<<extend>>" .-> uc_editar
+  uc_importar -. "<<extend>>" .-> uc_carregar_json
   uc_exportar -. "<<extend>>" .-> uc_listar_admin
+  uc_resetar -. "<<extend>>" .-> uc_listar_admin
 
   classDef actor fill:transparent,stroke:transparent,color:#222;
   class actor_admin actor;
