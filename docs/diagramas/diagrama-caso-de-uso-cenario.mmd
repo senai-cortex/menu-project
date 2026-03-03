@@ -1,35 +1,39 @@
 flowchart LR
-  actor_admin[Admin]
+  actor_admin["<<actor>>\nAdmin"]
 
   subgraph sistema["Sistema de Administracao Local (admin.html)"]
-    uc_abrir_painel((Abrir painel administrativo))
-    uc_carregar_json((Carregar JSON atual))
-    uc_listar_admin((Listar itens no painel))
-    uc_buscar_admin((Buscar item))
-    uc_filtrar_admin((Filtrar por categoria))
-    uc_criar((Criar item))
-    uc_editar((Editar item))
-    uc_validar((Validar campos obrigatorios))
-    uc_preview((Visualizar preview do item))
-    uc_remover((Remover item))
-    uc_importar((Importar JSON))
-    uc_exportar((Exportar JSON atualizado))
-    uc_resetar((Desfazer alteracoes locais))
+    uc_abrir_painel([Abrir painel administrativo])
+    uc_carregar_json([Carregar JSON atual])
+    uc_listar_admin([Listar itens no painel])
+    uc_buscar_admin([Buscar item])
+    uc_filtrar_admin([Filtrar por categoria])
+    uc_criar([Criar item])
+    uc_editar([Editar item])
+    uc_validar([Validar campos obrigatorios])
+    uc_preview([Visualizar preview do item])
+    uc_remover([Remover item])
+    uc_importar([Importar JSON])
+    uc_exportar([Exportar JSON atualizado])
+    uc_resetar([Desfazer alteracoes locais])
   end
 
-  actor_admin --> uc_abrir_painel
-  uc_abrir_painel --> uc_carregar_json
-  uc_carregar_json --> uc_listar_admin
+  actor_admin --- uc_abrir_painel
 
-  uc_buscar_admin -. "extend" .-> uc_listar_admin
-  uc_filtrar_admin -. "extend" .-> uc_listar_admin
+  uc_abrir_painel -. "<<include>>" .-> uc_carregar_json
+  uc_carregar_json -. "<<include>>" .-> uc_listar_admin
 
-  uc_criar --> uc_validar
-  uc_editar --> uc_validar
-  uc_criar --> uc_preview
-  uc_editar --> uc_preview
+  uc_buscar_admin -. "<<extend>>" .-> uc_listar_admin
+  uc_filtrar_admin -. "<<extend>>" .-> uc_listar_admin
 
-  uc_remover --> uc_listar_admin
-  uc_importar --> uc_listar_admin
-  uc_resetar --> uc_listar_admin
-  uc_exportar --> uc_listar_admin
+  uc_criar -. "<<include>>" .-> uc_validar
+  uc_editar -. "<<include>>" .-> uc_validar
+  uc_criar -. "<<include>>" .-> uc_preview
+  uc_editar -. "<<include>>" .-> uc_preview
+
+  uc_remover -. "<<extend>>" .-> uc_listar_admin
+  uc_importar -. "<<extend>>" .-> uc_listar_admin
+  uc_resetar -. "<<extend>>" .-> uc_listar_admin
+  uc_exportar -. "<<extend>>" .-> uc_listar_admin
+
+  classDef actor fill:transparent,stroke:transparent,color:#222;
+  class actor_admin actor;
