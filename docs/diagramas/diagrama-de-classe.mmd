@@ -1,0 +1,62 @@
+classDiagram
+  class MenuMeta {
+    +string restaurantName
+    +string currency
+    +string locale
+    +string lastUpdated
+  }
+
+  class Category {
+    +string id
+    +string name
+    +number order
+  }
+
+  class MenuItem {
+    +string id
+    +string categoryId
+    +string name
+    +number price
+    +string image
+    +number rating
+    +string description
+  }
+
+  class MenuData {
+    +MenuMeta meta
+    +Category[] categories
+    +MenuItem[] items
+  }
+
+  class AppController {
+    +loadMenu()
+    +renderItems()
+    +applyFilters()
+    +openItemModal()
+  }
+
+  class AdminController {
+    +loadMenu()
+    +renderList()
+    +saveItem()
+    +deleteItem()
+    +importJson()
+    +exportJson()
+  }
+
+  class MenuUtils {
+    +formatPrice()
+    +createMenuCard()
+    +debounce()
+    +sanitizeText()
+  }
+
+  MenuData "1" *-- "1" MenuMeta
+  MenuData "1" *-- "*" Category
+  MenuData "1" *-- "*" MenuItem
+  Category "1" <-- "*" MenuItem : categoryId
+
+  AppController ..> MenuData : consome
+  AdminController ..> MenuData : gerencia
+  AppController ..> MenuUtils : usa
+  AdminController ..> MenuUtils : usa

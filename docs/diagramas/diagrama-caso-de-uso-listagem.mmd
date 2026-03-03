@@ -1,0 +1,28 @@
+flowchart LR
+  actor_cliente[Cliente]
+  actor_atendimento[Garcom/Host]
+
+  subgraph sistema["Sistema Cardapio Digital (menu-restaurante)"]
+    uc_acessar((Acessar cardapio))
+    uc_carregar((Carregar data/menu.json))
+    uc_listar_categorias((Listar categorias))
+    uc_listar_itens((Listar itens do menu))
+    uc_buscar((Buscar por nome/descricao))
+    uc_filtrar((Filtrar por categoria))
+    uc_ordenar((Ordenar itens))
+    uc_contagem((Exibir total de resultados))
+    uc_detalhes((Ver detalhes do prato))
+  end
+
+  actor_cliente --> uc_acessar
+  actor_atendimento --> uc_acessar
+
+  uc_acessar --> uc_carregar
+  uc_carregar --> uc_listar_categorias
+  uc_carregar --> uc_listar_itens
+
+  uc_buscar -. "extend" .-> uc_listar_itens
+  uc_filtrar -. "extend" .-> uc_listar_itens
+  uc_ordenar -. "extend" .-> uc_listar_itens
+  uc_listar_itens --> uc_contagem
+  uc_listar_itens --> uc_detalhes
