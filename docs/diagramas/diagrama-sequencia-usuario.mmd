@@ -1,47 +1,31 @@
 sequenceDiagram
     autonumber
     actor Usuario as Usuario comum
-    participant UI as index.html
-    participant App as assets/js/app.js
-    participant Utils as assets/js/utils.js
-    participant JSON as data/menu.json
-    participant Modal as Dialog de detalhes
+    participant Cardapio as Cardapio digital
+    participant Sistema as Sistema
+    participant Dados as Base do cardapio
+    participant Detalhes as Janela de detalhes
 
-    Usuario->>UI: Acessa o cardapio digital
-    UI->>App: Inicializa pagina menu
-    App->>App: bindEvents() e syncFiltersForViewport()
-    App->>JSON: fetch("data/menu.json")
-    JSON-->>App: categories + items + meta
-    App->>App: validateData(payload)
+    Usuario->>Cardapio: Abre o cardapio
+    Cardapio->>Sistema: Solicita os itens disponiveis
+    Sistema->>Dados: Carrega categorias e pratos
+    Dados-->>Sistema: Retorna dados do cardapio
 
-    alt JSON valido
-        App->>Utils: deepClone(categories)
-        Utils-->>App: categorias clonadas
-        App->>UI: populateCategoryFilter()
-        App->>App: applyFilters()
-        App->>App: getFilteredItems()
-        App->>UI: renderItems() e resultsCount
-    else erro ao carregar ou JSON invalido
-        App->>UI: showError()
+    alt Dados carregados com sucesso
+        Sistema-->>Cardapio: Exibe categorias, pratos e quantidade encontrada
+    else Falha no carregamento
+        Sistema-->>Cardapio: Exibe mensagem de erro
     end
 
-    opt Usuario pesquisa, filtra ou ordena
-        Usuario->>UI: Digita busca / altera filtros
-        UI->>App: input/change
-        App->>Utils: debounce(applyFilters, 180)
-        Utils-->>App: chamada desacelerada
-        App->>App: getFilteredItems()
-        App->>UI: renderItems()
+    opt Usuario busca ou filtra pratos
+        Usuario->>Cardapio: Digita busca ou escolhe filtros
+        Cardapio->>Sistema: Aplica busca, categoria, preco e popularidade
+        Sistema-->>Cardapio: Atualiza a lista de pratos
     end
 
-    opt Usuario abre detalhes de um item
-        Usuario->>UI: Clica em "Ver detalhes"
-        UI->>App: openDetailsModal(item)
-        App->>Utils: formatYen(item.price, locale)
-        Utils-->>App: preco formatado
-        App->>Utils: setImageFallback(modalImage)
-        App->>Modal: showModal()/open
-        Modal-->>Usuario: Exibe detalhes do prato
-        Usuario->>Modal: Fecha modal
-        Modal->>App: closeDetailsModal()
+    opt Usuario quer ver mais informacoes
+        Usuario->>Cardapio: Clica em "Ver detalhes"
+        Cardapio->>Detalhes: Abre os detalhes do prato
+        Detalhes-->>Usuario: Mostra imagem, categoria, preco e descricao
+        Usuario->>Detalhes: Fecha a janela
     end
