@@ -3,13 +3,12 @@ sequenceDiagram
     actor Admin as Usuario administrador
     participant Painel as Painel administrativo
     participant Atendimento as Plataforma
-    participant CardapioAtual as Cardapio atual
-    participant Arquivo as Arquivo importado
+    participant Cardapio as Cardapio
 
     Admin->>Painel: Abre o painel administrativo
     Painel->>Atendimento: Solicita os dados atuais do cardapio
-    Atendimento->>CardapioAtual: Busca categorias e itens
-    CardapioAtual-->>Atendimento: Retorna o cardapio atual
+    Atendimento->>Cardapio: Busca os itens
+    Cardapio-->>Atendimento: Retorna o cardapio atual
 
     alt Dados carregados com sucesso
         Atendimento-->>Painel: Exibe lista de itens e formulario de edicao
@@ -19,12 +18,10 @@ sequenceDiagram
 
     opt Admin cria ou edita um item
         Admin->>Painel: Preenche ou altera os dados do prato
-        Painel-->>Admin: Mostra pre-visualizacao do card
         Admin->>Painel: Salva o item
         Painel->>Atendimento: Valida os dados informados
         alt Dados validos
-            Atendimento-->>Painel: Salva a alteracao localmente
-            Painel-->>Admin: Atualiza lista e resumo de alteracoes
+            Atendimento-->>Painel: Atualiza a lista de itens
         else Dados invalidos
             Atendimento-->>Painel: Informa os campos com erro
         end
@@ -32,35 +29,12 @@ sequenceDiagram
 
     opt Admin remove um item
         Admin->>Painel: Solicita remocao
-        Painel-->>Admin: Pede confirmacao
-        alt Remocao confirmada
-            Painel->>Atendimento: Remove o item localmente
-            Atendimento-->>Painel: Atualiza lista e resumo
-        else Remocao cancelada
-            Painel-->>Admin: Mantem item sem alteracoes
-        end
+        Painel->>Atendimento: Remove o item
+        Atendimento-->>Painel: Atualiza a lista de itens
     end
 
-    opt Admin importa um novo cardapio
+    opt Admin importa ou exporta o cardapio
         Admin->>Painel: Escolhe importar um arquivo
-        Painel->>Arquivo: Lê o arquivo selecionado
-        Arquivo-->>Atendimento: Entrega o novo cardapio
-        alt Arquivo valido
-            Atendimento-->>Painel: Substitui os dados atuais para edicao
-            Painel-->>Admin: Exibe cardapio importado
-        else Arquivo invalido
-            Atendimento-->>Painel: Informa falha na importacao
-        end
-    end
-
-    opt Admin exporta o cardapio
-        Admin->>Painel: Solicita exportacao
-        Painel->>Atendimento: Gera arquivo atualizado
-        Atendimento-->>Admin: Disponibiliza o download
-    end
-
-    opt Admin desfaz alteracoes locais
-        Admin->>Painel: Solicita desfazer alteracoes
-        Painel->>Atendimento: Restaura a versao carregada anteriormente
-        Atendimento-->>Painel: Recarrega lista, formulario e resumo
+        Painel->>Atendimento: Importa ou gera o cardapio
+        Atendimento-->>Painel: Exibe o resultado da acao
     end
