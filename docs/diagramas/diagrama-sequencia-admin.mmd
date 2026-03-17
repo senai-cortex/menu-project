@@ -1,0 +1,92 @@
+sequenceDiagram
+    autonumber
+    actor Admin as Usuario administrador
+    participant UI as admin.html
+    participant AdminJS as assets/js/admin.js
+    participant Utils as assets/js/utils.js
+    participant JSON as data/menu.json
+    participant File as Arquivo JSON local
+    participant Browser as APIs do navegador
+
+    Admin->>UI: Acessa o painel administrativo
+    UI->>AdminJS: bindEvents()
+    AdminJS->>JSON: fetch("data/menu.json")
+    JSON-->>AdminJS: payload inicial
+    AdminJS->>AdminJS: validatePayload(payload)
+
+    alt JSON inicial valido
+        AdminJS->>Utils: deepClone(payload)
+        Utils-->>AdminJS: originalData e workingData
+        AdminJS->>AdminJS: buildCategoryOptions()
+        AdminJS->>AdminJS: resetForm(), renderList(), renderDiffSummary()
+        AdminJS->>UI: setStatus("Dados carregados...")
+    else falha no carregamento
+        AdminJS->>UI: setStatus("Nao foi possivel carregar data/menu.json.")
+    end
+
+    opt Admin cria ou edita item
+        Admin->>UI: Preenche formulario
+        UI->>AdminJS: input
+        AdminJS->>Utils: debounce(renderPreview, 150)
+        Utils-->>AdminJS: chamada desacelerada
+        AdminJS->>UI: renderPreview()
+        Admin->>UI: Envia formulario
+        UI->>AdminJS: saveItem(event)
+        AdminJS->>AdminJS: readFormValues() e validateItem()
+        AdminJS->>Utils: slugify(nome) / isValidHttpUrl(url)
+        Utils-->>AdminJS: ID normalizado e validacao de URL
+        alt dados validos
+            AdminJS->>AdminJS: atualiza workingData.items
+            AdminJS->>UI: fillForm(), renderList(), renderDiffSummary()
+            AdminJS->>UI: setStatus("Item criado/atualizado localmente.")
+        else dados invalidos
+            AdminJS->>UI: showErrors() e setStatus("Corrija os erros...")
+        end
+    end
+
+    opt Admin remove item
+        Admin->>UI: Clica em remover
+        UI->>Browser: window.confirm()
+        alt confirmacao positiva
+            Browser-->>AdminJS: true
+            AdminJS->>AdminJS: filtra workingData.items
+            AdminJS->>UI: resetForm(), renderDiffSummary(), setStatus()
+        else cancelado
+            Browser-->>AdminJS: false
+        end
+    end
+
+    opt Admin importa JSON
+        Admin->>UI: Clica em "Importar JSON"
+        UI->>Browser: Seleciona arquivo local
+        Browser-->>AdminJS: File
+        AdminJS->>File: file.text()
+        File-->>AdminJS: conteudo JSON
+        AdminJS->>AdminJS: JSON.parse() e validatePayload()
+        alt arquivo valido
+            AdminJS->>Utils: deepClone(payload)
+            Utils-->>AdminJS: novo originalData e workingData
+            AdminJS->>UI: buildCategoryOptions(), renderList(), renderDiffSummary()
+            AdminJS->>UI: setStatus("JSON importado e pronto para edicao.")
+        else arquivo invalido
+            AdminJS->>UI: setStatus("Falha ao importar JSON.")
+        end
+    end
+
+    opt Admin exporta JSON
+        Admin->>UI: Clica em "Exportar JSON"
+        UI->>AdminJS: exportJson()
+        AdminJS->>Utils: deepClone(workingData)
+        Utils-->>AdminJS: payload de exportacao
+        AdminJS->>Browser: Blob + URL.createObjectURL() + link.click()
+        Browser-->>Admin: Download de menu.updated.json
+        AdminJS->>UI: setStatus("JSON exportado com sucesso.")
+    end
+
+    opt Admin desfaz alteracoes locais
+        Admin->>UI: Clica em "Desfazer alteracoes"
+        UI->>AdminJS: reset a partir de originalData
+        AdminJS->>Utils: deepClone(originalData)
+        Utils-->>AdminJS: workingData restaurado
+        AdminJS->>UI: resetForm(), renderList(), renderDiffSummary(), setStatus()
+    end

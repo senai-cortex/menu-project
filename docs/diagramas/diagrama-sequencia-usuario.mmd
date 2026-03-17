@@ -1,0 +1,47 @@
+sequenceDiagram
+    autonumber
+    actor Usuario as Usuario comum
+    participant UI as index.html
+    participant App as assets/js/app.js
+    participant Utils as assets/js/utils.js
+    participant JSON as data/menu.json
+    participant Modal as Dialog de detalhes
+
+    Usuario->>UI: Acessa o cardapio digital
+    UI->>App: Inicializa pagina menu
+    App->>App: bindEvents() e syncFiltersForViewport()
+    App->>JSON: fetch("data/menu.json")
+    JSON-->>App: categories + items + meta
+    App->>App: validateData(payload)
+
+    alt JSON valido
+        App->>Utils: deepClone(categories)
+        Utils-->>App: categorias clonadas
+        App->>UI: populateCategoryFilter()
+        App->>App: applyFilters()
+        App->>App: getFilteredItems()
+        App->>UI: renderItems() e resultsCount
+    else erro ao carregar ou JSON invalido
+        App->>UI: showError()
+    end
+
+    opt Usuario pesquisa, filtra ou ordena
+        Usuario->>UI: Digita busca / altera filtros
+        UI->>App: input/change
+        App->>Utils: debounce(applyFilters, 180)
+        Utils-->>App: chamada desacelerada
+        App->>App: getFilteredItems()
+        App->>UI: renderItems()
+    end
+
+    opt Usuario abre detalhes de um item
+        Usuario->>UI: Clica em "Ver detalhes"
+        UI->>App: openDetailsModal(item)
+        App->>Utils: formatYen(item.price, locale)
+        Utils-->>App: preco formatado
+        App->>Utils: setImageFallback(modalImage)
+        App->>Modal: showModal()/open
+        Modal-->>Usuario: Exibe detalhes do prato
+        Usuario->>Modal: Fecha modal
+        Modal->>App: closeDetailsModal()
+    end
