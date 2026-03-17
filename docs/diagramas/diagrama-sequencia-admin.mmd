@@ -2,31 +2,31 @@ sequenceDiagram
     autonumber
     actor Admin as Usuario administrador
     participant Painel as Painel administrativo
-    participant Sistema as Sistema
-    participant Dados as Cardapio atual
-    participant Arquivo as Arquivo JSON
+    participant Atendimento as Plataforma
+    participant CardapioAtual as Cardapio atual
+    participant Arquivo as Arquivo importado
 
     Admin->>Painel: Abre o painel administrativo
-    Painel->>Sistema: Solicita os dados atuais do cardapio
-    Sistema->>Dados: Carrega categorias e itens
-    Dados-->>Sistema: Retorna cardapio atual
+    Painel->>Atendimento: Solicita os dados atuais do cardapio
+    Atendimento->>CardapioAtual: Busca categorias e itens
+    CardapioAtual-->>Atendimento: Retorna o cardapio atual
 
     alt Dados carregados com sucesso
-        Sistema-->>Painel: Exibe lista de itens e formulario de edicao
+        Atendimento-->>Painel: Exibe lista de itens e formulario de edicao
     else Falha no carregamento
-        Sistema-->>Painel: Exibe mensagem de erro
+        Atendimento-->>Painel: Exibe mensagem de erro
     end
 
     opt Admin cria ou edita um item
         Admin->>Painel: Preenche ou altera os dados do prato
         Painel-->>Admin: Mostra pre-visualizacao do card
         Admin->>Painel: Salva o item
-        Painel->>Sistema: Valida os dados informados
+        Painel->>Atendimento: Valida os dados informados
         alt Dados validos
-            Sistema-->>Painel: Salva a alteracao localmente
+            Atendimento-->>Painel: Salva a alteracao localmente
             Painel-->>Admin: Atualiza lista e resumo de alteracoes
         else Dados invalidos
-            Sistema-->>Painel: Informa os campos com erro
+            Atendimento-->>Painel: Informa os campos com erro
         end
     end
 
@@ -34,33 +34,33 @@ sequenceDiagram
         Admin->>Painel: Solicita remocao
         Painel-->>Admin: Pede confirmacao
         alt Remocao confirmada
-            Painel->>Sistema: Remove o item localmente
-            Sistema-->>Painel: Atualiza lista e resumo
+            Painel->>Atendimento: Remove o item localmente
+            Atendimento-->>Painel: Atualiza lista e resumo
         else Remocao cancelada
             Painel-->>Admin: Mantem item sem alteracoes
         end
     end
 
-    opt Admin importa um novo arquivo
-        Admin->>Painel: Escolhe importar JSON
+    opt Admin importa um novo cardapio
+        Admin->>Painel: Escolhe importar um arquivo
         Painel->>Arquivo: Lê o arquivo selecionado
-        Arquivo-->>Sistema: Entrega os dados importados
+        Arquivo-->>Atendimento: Entrega o novo cardapio
         alt Arquivo valido
-            Sistema-->>Painel: Substitui os dados atuais para edicao
+            Atendimento-->>Painel: Substitui os dados atuais para edicao
             Painel-->>Admin: Exibe cardapio importado
         else Arquivo invalido
-            Sistema-->>Painel: Informa falha na importacao
+            Atendimento-->>Painel: Informa falha na importacao
         end
     end
 
     opt Admin exporta o cardapio
         Admin->>Painel: Solicita exportacao
-        Painel->>Sistema: Gera arquivo atualizado
-        Sistema-->>Admin: Disponibiliza download do JSON
+        Painel->>Atendimento: Gera arquivo atualizado
+        Atendimento-->>Admin: Disponibiliza o download
     end
 
     opt Admin desfaz alteracoes locais
         Admin->>Painel: Solicita desfazer alteracoes
-        Painel->>Sistema: Restaura a versao carregada anteriormente
-        Sistema-->>Painel: Recarrega lista, formulario e resumo
+        Painel->>Atendimento: Restaura a versao carregada anteriormente
+        Atendimento-->>Painel: Recarrega lista, formulario e resumo
     end

@@ -2,25 +2,25 @@ sequenceDiagram
     autonumber
     actor Usuario as Usuario comum
     participant Cardapio as Cardapio digital
-    participant Sistema as Sistema
-    participant Dados as Base do cardapio
+    participant Atendimento as Plataforma
+    participant CardapioBase as Cardapio disponivel
     participant Detalhes as Janela de detalhes
 
     Usuario->>Cardapio: Abre o cardapio
-    Cardapio->>Sistema: Solicita os itens disponiveis
-    Sistema->>Dados: Carrega categorias e pratos
-    Dados-->>Sistema: Retorna dados do cardapio
+    Cardapio->>Atendimento: Solicita os itens disponiveis
+    Atendimento->>CardapioBase: Busca categorias e pratos
+    CardapioBase-->>Atendimento: Retorna o cardapio
 
     alt Dados carregados com sucesso
-        Sistema-->>Cardapio: Exibe categorias, pratos e quantidade encontrada
+        Atendimento-->>Cardapio: Exibe categorias, pratos e quantidade encontrada
     else Falha no carregamento
-        Sistema-->>Cardapio: Exibe mensagem de erro
+        Atendimento-->>Cardapio: Exibe mensagem de erro
     end
 
     opt Usuario busca ou filtra pratos
         Usuario->>Cardapio: Digita busca ou escolhe filtros
-        Cardapio->>Sistema: Aplica busca, categoria, preco e popularidade
-        Sistema-->>Cardapio: Atualiza a lista de pratos
+        Cardapio->>Atendimento: Aplica busca, categoria, preco e popularidade
+        Atendimento-->>Cardapio: Atualiza a lista de pratos
     end
 
     opt Usuario quer ver mais informacoes
