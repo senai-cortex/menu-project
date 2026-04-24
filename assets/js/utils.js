@@ -5,6 +5,7 @@
     return new Intl.NumberFormat(locale || "ja-JP", {
       style: "currency",
       currency: "JPY",
+      currencyDisplay: "narrowSymbol",
       maximumFractionDigits: 0
     }).format(Number(value) || 0);
   }
