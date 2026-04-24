@@ -1,7 +1,5 @@
 (function initMenuPage(window, document) {
-  if (document.body.dataset.page !== "menu") {
-    return;
-  }
+  if (document.body.dataset.page !== "menu") return;
 
   const {
     parseRange,
@@ -16,6 +14,7 @@
     searchInput: document.getElementById("search-input"),
     filtersToggle: document.getElementById("filters-toggle"),
     filtersPanel: document.getElementById("filters-panel"),
+    categoryChips: document.getElementById("category-chips"),
     categoryFilter: document.getElementById("category-filter"),
     priceFilter: document.getElementById("price-filter"),
     ratingFilter: document.getElementById("rating-filter"),
@@ -35,7 +34,7 @@
     modalImage: document.getElementById("modal-image")
   };
 
-  const compactViewportQuery = window.matchMedia("(max-width: 680px)");
+  const compactViewportQuery = window.matchMedia("(max-width: 719px)");
 
   const state = {
     data: null,
@@ -45,15 +44,19 @@
   function setFiltersPanelState(isExpanded) {
     elements.filtersPanel.hidden = !isExpanded;
     elements.filtersToggle.setAttribute("aria-expanded", String(isExpanded));
-    elements.filtersToggle.textContent = isExpanded ? "Ocultar filtros" : "Mostrar filtros";
+    elements.filtersToggle.setAttribute(
+      "aria-label",
+      isExpanded ? "Fechar filtros" : "Abrir filtros"
+    );
   }
 
   function syncFiltersForViewport(isCompactViewport) {
     if (!isCompactViewport) {
-      setFiltersPanelState(true);
-      return;
+      elements.filtersPanel.hidden = false;
+      elements.filtersToggle.setAttribute("aria-expanded", "true");
+    } else {
+      setFiltersPanelState(false);
     }
-    setFiltersPanelState(false);
   }
 
   function showError(message) {
@@ -63,33 +66,55 @@
     elements.resultsCount.textContent = "";
   }
 
-  function hideStatus() {
+  function hideLoading() {
     elements.loadingState.classList.add("hidden");
     elements.errorState.classList.add("hidden");
   }
 
   function validateData(payload) {
-    if (!payload || !Array.isArray(payload.categories) || !Array.isArray(payload.items)) {
-      return false;
-    }
-    return true;
+    return (
+      payload &&
+      Array.isArray(payload.categories) &&
+      Array.isArray(payload.items)
+    );
   }
 
-  function populateCategoryFilter(categories) {
-    const sorted = deepClone(categories).sort((a, b) => (a.order || 0) - (b.order || 0));
+  function buildCategoryControls(categories) {
+    const sorted = deepClone(categories).sort(
+      (a, b) => (a.order || 0) - (b.order || 0)
+    );
+
     for (const category of sorted) {
       state.categoriesById.set(category.id, category.name);
+
       const option = document.createElement("option");
       option.value = category.id;
       option.textContent = category.name;
       elements.categoryFilter.append(option);
+
+      const chip = document.createElement("button");
+      chip.type = "button";
+      chip.className = "chip";
+      chip.dataset.category = category.id;
+      chip.setAttribute("aria-pressed", "false");
+      chip.textContent = category.name;
+      elements.categoryChips.append(chip);
     }
   }
 
+  function setActiveChip(categoryId) {
+    const chips = elements.categoryChips.querySelectorAll(".chip");
+    chips.forEach((chip) => {
+      const active = chip.dataset.category === categoryId;
+      chip.setAttribute("aria-pressed", String(active));
+      if (active) {
+        chip.scrollIntoView({ behavior: "smooth", inline: "center", block: "nearest" });
+      }
+    });
+  }
+
   function getFilteredItems() {
-    if (!state.data) {
-      return [];
-    }
+    if (!state.data) return [];
 
     const searchValue = elements.searchInput.value.trim().toLowerCase();
     const selectedCategory = elements.categoryFilter.value;
@@ -102,23 +127,18 @@
         !searchValue ||
         item.name.toLowerCase().includes(searchValue) ||
         item.description.toLowerCase().includes(searchValue);
-      const categoryMatch = selectedCategory === "all" || item.categoryId === selectedCategory;
-      const priceMatch = Number(item.price) >= min && Number(item.price) <= max;
+      const categoryMatch =
+        selectedCategory === "all" || item.categoryId === selectedCategory;
+      const priceMatch =
+        Number(item.price) >= min && Number(item.price) <= max;
       const ratingMatch = Number(item.rating) >= minRating;
-
       return searchMatch && categoryMatch && priceMatch && ratingMatch;
     });
 
     filtered.sort((a, b) => {
-      if (sortValue === "price-asc") {
-        return Number(a.price) - Number(b.price);
-      }
-      if (sortValue === "price-desc") {
-        return Number(b.price) - Number(a.price);
-      }
-      if (sortValue === "name-asc") {
-        return a.name.localeCompare(b.name, "pt-BR");
-      }
+      if (sortValue === "price-asc") return Number(a.price) - Number(b.price);
+      if (sortValue === "price-desc") return Number(b.price) - Number(a.price);
+      if (sortValue === "name-asc") return a.name.localeCompare(b.name, "pt-BR");
       return Number(b.rating) - Number(a.rating);
     });
 
@@ -130,37 +150,41 @@
     elements.emptyState.classList.toggle("hidden", items.length > 0);
 
     if (items.length === 0) {
-      elements.resultsCount.textContent = "0 itens encontrados";
+      elements.resultsCount.textContent = "0 itens";
       return;
     }
 
     const fragment = document.createDocumentFragment();
 
-    for (const item of items) {
-      const categoryName = state.categoriesById.get(item.categoryId) || "Sem categoria";
+    items.forEach((item, index) => {
+      const categoryName =
+        state.categoriesById.get(item.categoryId) || "Sem categoria";
       const card = createMenuCard(item, categoryName, {
         onOpenDetails: openDetailsModal
       });
+      card.style.animationDelay = `${Math.min(index, 12) * 0.04}s`;
       fragment.append(card);
-    }
+    });
 
-    elements.resultsCount.textContent = `${items.length} item(ns) encontrado(s)`;
+    const label = items.length === 1 ? "1 item" : `${items.length} itens`;
+    elements.resultsCount.textContent = label;
     elements.menuGrid.append(fragment);
   }
 
   function applyFilters() {
-    hideStatus();
+    hideLoading();
     const items = getFilteredItems();
     renderItems(items);
   }
 
   function openDetailsModal(item) {
-    const categoryName = state.categoriesById.get(item.categoryId) || "Sem categoria";
+    const categoryName =
+      state.categoriesById.get(item.categoryId) || "Sem categoria";
 
     elements.modalCategory.textContent = categoryName;
     elements.modalTitle.textContent = item.name;
     elements.modalPrice.textContent = formatYen(item.price, state.data.meta.locale);
-    elements.modalRating.textContent = `★ ${Number(item.rating).toFixed(1)}`;
+    elements.modalRating.textContent = Number(item.rating).toFixed(1);
     elements.modalDescription.textContent = item.description;
     elements.modalImage.src = item.image;
     elements.modalImage.alt = item.name;
@@ -170,7 +194,6 @@
       elements.modal.showModal();
       return;
     }
-
     elements.modal.setAttribute("open", "open");
   }
 
@@ -179,7 +202,6 @@
       elements.modal.close();
       return;
     }
-
     elements.modal.removeAttribute("open");
   }
 
@@ -187,27 +209,41 @@
     const debouncedFilters = debounce(applyFilters, 180);
 
     elements.searchInput.addEventListener("input", debouncedFilters);
+
     elements.filtersToggle.addEventListener("click", () => {
-      const isExpanded = elements.filtersToggle.getAttribute("aria-expanded") === "true";
+      const isExpanded =
+        elements.filtersToggle.getAttribute("aria-expanded") === "true";
       setFiltersPanelState(!isExpanded);
     });
-    elements.categoryFilter.addEventListener("change", applyFilters);
+
+    elements.categoryChips.addEventListener("click", (event) => {
+      const chip = event.target.closest(".chip");
+      if (!chip) return;
+      const value = chip.dataset.category;
+      elements.categoryFilter.value = value;
+      setActiveChip(value);
+      applyFilters();
+    });
+
+    elements.categoryFilter.addEventListener("change", () => {
+      setActiveChip(elements.categoryFilter.value);
+      applyFilters();
+    });
+
     elements.priceFilter.addEventListener("change", applyFilters);
     elements.ratingFilter.addEventListener("change", applyFilters);
     elements.sortFilter.addEventListener("change", applyFilters);
 
     elements.modalClose.addEventListener("click", closeDetailsModal);
-
     elements.modal.addEventListener("click", (event) => {
-      const target = event.target;
-      if (target === elements.modal) {
-        closeDetailsModal();
-      }
+      if (event.target === elements.modal) closeDetailsModal();
+    });
+    elements.modal.addEventListener("cancel", (event) => {
+      event.preventDefault();
+      closeDetailsModal();
     });
 
-    const onViewportChange = (event) => {
-      syncFiltersForViewport(event.matches);
-    };
+    const onViewportChange = (event) => syncFiltersForViewport(event.matches);
     if (typeof compactViewportQuery.addEventListener === "function") {
       compactViewportQuery.addEventListener("change", onViewportChange);
     } else {
@@ -218,25 +254,21 @@
   async function init() {
     bindEvents();
     syncFiltersForViewport(compactViewportQuery.matches);
+    setActiveChip("all");
 
     try {
       const response = await fetch("data/menu.json", { cache: "no-store" });
-      if (!response.ok) {
-        throw new Error("Resposta inválida ao carregar JSON");
-      }
+      if (!response.ok) throw new Error("Resposta inválida ao carregar JSON");
 
       const payload = await response.json();
-
-      if (!validateData(payload)) {
-        throw new Error("Formato de JSON inválido");
-      }
+      if (!validateData(payload)) throw new Error("Formato de JSON inválido");
 
       state.data = payload;
-      populateCategoryFilter(state.data.categories);
+      buildCategoryControls(state.data.categories);
       applyFilters();
-      elements.loadingState.classList.add("hidden");
+      hideLoading();
     } catch (error) {
-      showError("Erro ao carregar o cardápio JSON. Verifique o arquivo data/menu.json.");
+      showError("Erro ao carregar o cardápio. Verifique data/menu.json.");
       console.error(error);
     }
   }

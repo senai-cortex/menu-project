@@ -2,12 +2,13 @@
 <html lang="pt-BR">
   <head>
     <meta charset="UTF-8" />
-    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover" />
+    <meta name="theme-color" content="#120609" />
     <meta
       name="description"
       content="Painel local para editar itens do cardápio e exportar JSON atualizado."
     />
-    <title>Kurohana Administração | Editor de Cardápio</title>
+    <title>Kurohana Admin | Editor de Cardápio</title>
     <link rel="preconnect" href="https://fonts.googleapis.com" />
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
     <link
@@ -19,9 +20,23 @@
   <body data-page="admin">
     <div class="site-bg" aria-hidden="true"></div>
 
+    <header class="topbar">
+      <div class="topbar-inner container">
+        <a href="index.html" class="brand" aria-label="Voltar ao cardápio">
+          <span class="brand-mark" aria-hidden="true">黒</span>
+          <span>
+            <span class="brand-name">Kurohana <em>Admin</em></span>
+            <span class="brand-jp" aria-hidden="true">管理</span>
+          </span>
+        </a>
+        <a class="brand-jp" href="index.html" style="text-decoration:none;">← Cardápio</a>
+      </div>
+    </header>
+
     <header class="hero container hero-admin">
       <p class="hero-kicker">Administração Local</p>
-      <h1 class="hero-title">Editor de Cardápio JSON</h1>
+      <h1 class="hero-title">Editor de Cardápio</h1>
+      <span class="hero-jp" aria-hidden="true">編集</span>
       <p class="hero-subtitle">
         Edite itens localmente e exporte um novo arquivo JSON para publicação.
       </p>
@@ -35,7 +50,7 @@
           <button id="import-btn" type="button">Importar JSON</button>
           <input id="import-input" type="file" accept="application/json" hidden />
           <button id="export-btn" type="button">Exportar JSON</button>
-          <button id="reset-btn" type="button" class="danger">Desfazer alterações</button>
+          <button id="reset-btn" type="button" class="danger">Desfazer</button>
         </div>
 
         <div class="field">
@@ -79,13 +94,13 @@
             <small class="error-text" data-error-for="categoryId"></small>
           </div>
 
-          <div class="field field-inline">
-            <div>
+          <div class="field-inline">
+            <div class="field">
               <label for="item-price">Preço (JPY)</label>
               <input id="item-price" name="price" type="number" min="1" step="1" required />
               <small class="error-text" data-error-for="price"></small>
             </div>
-            <div>
+            <div class="field">
               <label for="item-rating">Avaliação (0-5)</label>
               <input id="item-rating" name="rating" type="number" min="0" max="5" step="0.1" required />
               <small class="error-text" data-error-for="rating"></small>
@@ -106,7 +121,7 @@
 
           <div class="tool-row">
             <button type="submit" id="save-btn">Salvar item</button>
-            <button type="button" id="new-btn">Novo item</button>
+            <button type="button" id="new-btn" class="ghost">Novo item</button>
             <button type="button" id="delete-btn" class="danger hidden">Remover item</button>
           </div>
         </form>
